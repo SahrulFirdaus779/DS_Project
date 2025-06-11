@@ -83,8 +83,7 @@ gdf = load_geojson()
 
 # --- Sidebar (Menu Navigasi) ---
 with st.sidebar:
-    # Perbaikan: Menggunakan logokemenag.jpg dengan ukuran lebih bagus
-    st.image("logokemenag.jpg", width=150) # Anda bisa coba ukuran width lain seperti 120, 180
+    st.image("logo/Monogram.svg", width=150) # Menambahkan logo
     st.title("Kelompok Pemula") # Menambahkan judul kelompok
     st.markdown("---")
 

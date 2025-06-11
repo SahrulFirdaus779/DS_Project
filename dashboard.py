@@ -82,7 +82,7 @@ gdf = load_geojson()
 
 # --- Sidebar (Menu Navigasi) ---
 with st.sidebar:
-    st.image("logokemenag.jpg")
+    st.image("logo/Monogram.svg", width=150)
     st.title("🌐 Kelompok Pemula")
     st.markdown("---")
 
