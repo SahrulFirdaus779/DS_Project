@@ -705,8 +705,8 @@ elif menu_choice == "Prediksi Perceraian":
     else:
         st.info("Data kosong. Tidak dapat melakukan prediksi.")
 
-elif menu_choice == "Data Mentah":
-    st.title("🗄️ Data Mentah")
+elif menu_choice == "Detail Data":
+    st.title("🗄️ Detail Data")
     st.markdown("Halaman ini akan menampilkan tabel data yang digunakan.")
     st.markdown("---")
 
