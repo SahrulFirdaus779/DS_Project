@@ -11,7 +11,7 @@ import os # Import os to check for secrets.toml existence
 # --- Konfigurasi Halaman Streamlit ---
 st.set_page_config(
     page_title="Dashboard Analisis Perceraian Indonesia",
-    page_icon="⚖️",
+    page_icon="logo/Monogram.svg",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -83,7 +83,7 @@ gdf = load_geojson()
 # --- Sidebar (Menu Navigasi) ---
 with st.sidebar:
     st.image("logo/Monogram.svg", width=150)
-    st.title("🌐 Kelompok Pemula")
+    st.title("Kelompok Pemula")
     st.markdown("---")
 
     menu_choice = st.radio(
@@ -95,7 +95,7 @@ with st.sidebar:
     st.header("Tentang Proyek")
     st.info("""
         Proyek ini menganalisis tren dan faktor penyebab perceraian di Indonesia.
-        Data bersumber dari [Sumber Data Anda, misal: BPS, Kemenag].
+        Data bersumber dari BPS.
         Dibuat oleh Kelompok Pemula.
     """)
 
@@ -114,7 +114,7 @@ if menu_choice == "Beranda / Ringkasan":
     st.markdown("""
     Selamat datang di Dashboard Analisis Perceraian di Indonesia. Dashboard ini menyajikan gambaran komprehensif mengenai
     tren dan faktor-faktor yang melatarbelakangi kasus perceraian di berbagai provinsi di Indonesia.
-    Kami mengundang Anda untuk menjelajahi data ini lebih lanjut untuk memahami dinamika sosial yang terjadi.
+    Kami mengajak Anda untuk menjelajahi data ini lebih lanjut untuk memahami dinamika sosial yang terjadi.
     """)
     st.markdown("---")
 
@@ -393,28 +393,44 @@ elif menu_choice == "Faktor Penyebab":
 
     if selected_year_factor is not None:
         df_filtered_factor = df[df['Tahun'] == selected_year_factor]
+        
+        # Perbaikan: Logika untuk distribusi faktor berdasarkan provinsi
         if selected_provinces_factor:
-            df_filtered_factor = df_filtered_factor[df_filtered_factor['Provinsi'].isin(selected_provinces_factor)]
+            df_plot_factor_data_raw = df_filtered_factor[df_filtered_factor['Provinsi'].isin(selected_provinces_factor)]
+            # Drop the original 'Jumlah' column before melting to avoid conflict
+            if 'Jumlah' in df_plot_factor_data_raw.columns:
+                 df_plot_factor_data_raw = df_plot_factor_data_raw.drop(columns=['Jumlah'])
+            
+            df_plot_factor_data_melted = df_plot_factor_data_raw.melt(id_vars=['Tahun', 'Provinsi'], value_vars=factor_cols, var_name='Faktor', value_name='Jumlah')
+            df_plot_factor_data_melted['Faktor'] = df_plot_factor_data_melted['Faktor'].str.replace('_', ' ').str.title()
+            
+            # Group by Factor and Province to sum up before plotting if multiple rows per province/year
+            df_plot_factor_data_aggregated = df_plot_factor_data_melted.groupby(['Faktor', 'Provinsi'])['Jumlah'].sum().reset_index()
 
-        if not df_filtered_factor.empty and factor_cols:
-            # --- Horizontal Bar Chart for Factor Distribution ---
-            st.subheader(f"Distribusi Faktor Penyebab Perceraian Tahun {selected_year_factor}{' di ' + ' & '.join(selected_provinces_factor) if selected_provinces_factor else ' Nasional'}")
+            title_suffix_factor = f"di {', '.join(selected_provinces_factor)}"
 
-            total_per_faktor = df_filtered_factor[factor_cols].sum().sort_values(ascending=True).reset_index()
-            total_per_faktor.columns = ['Faktor', 'Jumlah']
-            total_per_faktor['Faktor'] = total_per_faktor['Faktor'].str.replace('_', ' ').str.title()
+        else: # National view
+            df_plot_factor_data_aggregated = df_filtered_factor[factor_cols].sum().reset_index()
+            df_plot_factor_data_aggregated.columns = ['Faktor', 'Jumlah']
+            df_plot_factor_data_aggregated['Faktor'] = df_plot_factor_data_aggregated['Faktor'].str.replace('_', ' ').str.title()
+            df_plot_factor_data_aggregated['Provinsi'] = 'Nasional' # Add dummy for consistent plotting
+            title_suffix_factor = "Nasional"
 
-            if not total_per_faktor.empty and total_per_faktor['Jumlah'].sum() > 0:
-                fig_factors_bar = px.bar(total_per_faktor, x='Jumlah', y='Faktor', orientation='h',
-                                          title="Jumlah Kasus Berdasarkan Faktor",
-                                          labels={'Jumlah': 'Jumlah Kasus', 'Faktor': 'Faktor Perceraian'},
-                                          color='Jumlah', color_continuous_scale=px.colors.sequential.RdPu)
-                fig_factors_bar.update_traces(texttemplate='%{x:,.0f}', textposition='outside')
-                fig_factors_bar.update_layout(yaxis={'categoryorder':'total ascending'})
-                st.plotly_chart(fig_factors_bar, use_container_width=True)
-            else:
-                st.info("Tidak ada data faktor penyebab untuk tahun dan provinsi yang dipilih.")
+        if not df_plot_factor_data_aggregated.empty and df_plot_factor_data_aggregated['Jumlah'].sum() > 0:
+            # --- Horizontal Bar Chart for Factor Distribution (Grouped if multi-province) ---
+            st.subheader(f"Distribusi Faktor Penyebab Perceraian Tahun {selected_year_factor} {title_suffix_factor}")
 
+            fig_factors_bar = px.bar(df_plot_factor_data_aggregated.sort_values('Jumlah', ascending=True), 
+                                     x='Jumlah', y='Faktor', orientation='h',
+                                     color='Provinsi' if selected_provinces_factor else None, # Color by province
+                                     barmode='group' if selected_provinces_factor else 'relative', # Grouped bars if multi-province
+                                     title="Jumlah Kasus Berdasarkan Faktor",
+                                     labels={'Jumlah': 'Jumlah Kasus', 'Faktor': 'Faktor Perceraian'},
+                                     color_continuous_scale=px.colors.sequential.RdPu if not selected_provinces_factor else None)
+            
+            fig_factors_bar.update_traces(texttemplate='%{x:,.0f}', textposition='outside')
+            fig_factors_bar.update_layout(yaxis={'categoryorder':'total ascending'})
+            st.plotly_chart(fig_factors_bar, use_container_width=True)
             st.markdown("---")
 
             # --- Line Chart for Trend of a Specific Factor (National) ---
@@ -687,7 +703,7 @@ elif menu_choice == "Detail Data":
             st.warning("Tidak ada data yang sesuai dengan filter yang dipilih. Harap sesuaikan filter Anda.")
         else:
             # --- Ringkasan Statistik Global (Sekarang Berdasarkan Filter) ---
-            st.subheader("Ringkasan Data Global (Berdasarkan Filter)")
+            st.subheader("Ringkasan Data Global")
             col_summary1, col_summary2, col_summary3 = st.columns(3)
             with col_summary1:
                 st.metric("Jumlah Baris Data", f"{df_filtered_detail.shape[0]:,.0f}")

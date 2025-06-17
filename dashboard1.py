@@ -771,6 +771,16 @@ elif menu_choice == "Detail Data":
                 * [**Sahrul Firdaus (0110223114)**](https://www.linkedin.com/in/sahrul-firdaus/)
             """)
             st.info("Proyek ini adalah bagian dari inisiatif untuk menyediakan analisis data perceraian yang transparan dan mudah diakses bagi masyarakat.")
+            st.markdown("---")
+            
+            # Bagian Sumber Data
+            st.subheader("Sumber Data")
+            st.write("Berikut Sumber Data yang kami gunakan:")
+            st.markdown("""
+            * [**Jumlah Perceraian Menurut Provinsi dan Faktor Penyebab Perceraian**](https://www.bps.go.id/id/statistics-table/3/YVdoU1IwVmlTM2h4YzFoV1psWkViRXhqTlZwRFVUMDkjMw==/jumlah-perceraian-menurut-provinsi-dan-faktor.html)
+            * [**Nikah dan Cerai Menurut Provinsi**](https://www.bps.go.id/id/statistics-table/3/VkhwVUszTXJPVmQ2ZFRKamNIZG9RMVo2VEdsbVVUMDkjMyMwMDAw/nikah-dan-cerai-menurut-provinsi--kejadian-.html)
+            * [**Peta Indonesia**](https://github.com/yusufsyaifudin/wilayah-indonesia/blob/master/data/list_of_area/indonesia-region.min.json)
+             """)
 
     else:
         st.info("Data kosong. Mohon periksa file 'finaldata.csv' Anda.")
