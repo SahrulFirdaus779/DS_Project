@@ -687,7 +687,7 @@ elif menu_choice == "Detail Data":
             st.warning("Tidak ada data yang sesuai dengan filter yang dipilih. Harap sesuaikan filter Anda.")
         else:
             # --- Ringkasan Statistik Global (Sekarang Berdasarkan Filter) ---
-            st.subheader("Ringkasan Data Global")
+            st.subheader("Ringkasan Data Global (Berdasarkan Filter)")
             col_summary1, col_summary2, col_summary3 = st.columns(3)
             with col_summary1:
                 st.metric("Jumlah Baris Data", f"{df_filtered_detail.shape[0]:,.0f}")
@@ -714,7 +714,7 @@ elif menu_choice == "Detail Data":
                 * Achmad Rifa'i Ramadhan (0110223138)
                 * M Irkham Dwi Ramadhan (0110223284)
                 * M Rifanul Haq Ihsani (0110221335)
-                * [**Sahrul Firdaus (0110223114)**](https://www.linkedin.com/in/sahrul-firdaus/)
+                * Sahrul Firdaus (0110223114)
             """)
             st.info("Proyek ini adalah bagian dari inisiatif untuk menyediakan analisis data perceraian yang transparan dan mudah diakses bagi masyarakat.")
 
