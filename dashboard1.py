@@ -12,7 +12,7 @@ import os
 # --- Konfigurasi Halaman Streamlit ---
 st.set_page_config(
     page_title="Dashboard Analisis Perceraian Indonesia",
-    page_icon="⚖️",
+    page_icon="logo/Monogram.svg",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -578,7 +578,7 @@ elif menu_choice == "Peta Visualisasi":
 
         # Mapbox token from Streamlit secrets (recommended) or direct
         # You need to configure this in .streamlit/secrets.toml
-        # MAPBOX_ACCESS_TOKEN = "YOUR_MAPBOX_ACCESS_TOKEN"
+        MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoicmlmYWlybWRobm4iLCJhIjoiY21jMGs5Y3oyMDMzcjJrcjNucTdqaDZ4ZiJ9.8A84VhTcxYz2iOMi_7FKIg"
         # If using st.secrets, ensure you have [mapbox] token="your_token" in secrets.toml
         try:
             px.set_mapbox_access_token(st.secrets["mapbox"]["token"])
