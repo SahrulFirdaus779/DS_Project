@@ -89,7 +89,7 @@ with st.sidebar:
 
     menu_choice = st.radio(
         "Pilih Halaman",
-        ("Beranda / Ringkasan", "Tren Perceraian", "Faktor Penyebab", "Perbandingan Provinsi", "Peta Visualisasi", "Prediksi Perceraian", "Data Mentah")
+        ("Beranda / Ringkasan", "Tren Perceraian", "Faktor Penyebab", "Perbandingan Provinsi", "Peta Visualisasi", "Prediksi Perceraian", "Detail Data")
     )
 
     st.markdown("---")

@@ -11,7 +11,7 @@ import os # Import os to check for secrets.toml existence
 # --- Konfigurasi Halaman Streamlit ---
 st.set_page_config(
     page_title="Dashboard Analisis Perceraian Indonesia",
-    page_icon="⚖️",
+    page_icon="logo/Monogram.svg",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -83,12 +83,12 @@ gdf = load_geojson()
 # --- Sidebar (Menu Navigasi) ---
 with st.sidebar:
     st.image("logo/Monogram.svg", width=150)
-    st.title("🌐 Kelompok Pemula")
+    st.title("Kelompok Pemula")
     st.markdown("---")
 
     menu_choice = st.radio(
         "Pilih Halaman",
-        ("Beranda / Ringkasan", "Tren Perceraian", "Faktor Penyebab", "Perbandingan Provinsi", "Peta Visualisasi", "Prediksi Perceraian", "Data Mentah")
+        ("Beranda / Ringkasan", "Tren Perceraian", "Faktor Penyebab", "Perbandingan Provinsi", "Peta Visualisasi", "Prediksi Perceraian", "Detail Data")
     )
 
     st.markdown("---")
@@ -527,7 +527,7 @@ elif menu_choice == "Peta Visualisasi":
 
         # Mapbox token from Streamlit secrets (recommended) or direct
         # You need to configure this in .streamlit/secrets.toml
-        # MAPBOX_ACCESS_TOKEN = "YOUR_MAPBOX_ACCESS_TOKEN"
+        MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoicmlmYWlybWRobm4iLCJhIjoiY21jMGs5Y3oyMDMzcjJrcjNucTdqaDZ4ZiJ9.8A84VhTcxYz2iOMi_7FKIg"
         # If using st.secrets, ensure you have [mapbox] token="your_token" in secrets.toml
         try:
             px.set_mapbox_access_token(st.secrets["mapbox"]["token"])
@@ -651,8 +651,8 @@ elif menu_choice == "Prediksi Perceraian":
     else:
         st.info("Data kosong. Tidak dapat melakukan prediksi.")
 
-elif menu_choice == "Data Mentah":
-    st.title("🗄️ Data Mentah")
+elif menu_choice == "Detail Data":
+    st.title("🗄️ Detail Data")
     st.markdown("Halaman ini akan menampilkan tabel data yang digunakan.")
     st.markdown("---")
 
