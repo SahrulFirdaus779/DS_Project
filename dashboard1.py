@@ -113,9 +113,18 @@ if menu_choice == "Beranda / Ringkasan":
     st.markdown("---")
 
     st.markdown("""
-    Selamat datang di Dashboard Analisis Perceraian di Indonesia. Dashboard ini menyajikan gambaran komprehensif mengenai
-    tren dan faktor-faktor yang melatarbelakangi kasus perceraian di berbagai provinsi di Indonesia.
-    Kami mengundang Anda untuk menjelajahi data ini lebih lanjut untuk memahami dinamika sosial yang terjadi.
+    Selamat datang di Dashboard Analisis Perceraian di Indonesia. Dashboard ini menyajikan gambaran komprehensif mengenai tren dan faktor-faktor yang melatarbelakangi kasus perceraian di berbagai provinsi di Indonesia. Kami mengundang Anda untuk menjelajahi data ini lebih lanjut demi memahami dinamika sosial yang terjadi.\n
+    Kami adalah orang-orang di balik pembuatan proyek ini. Tim kami terdiri dari lima orang, yaitu:\n
+    **Abiyyu Cakra (0110221100)**
+    
+    **Sahrul Firdaus (0110223114)**
+    
+    **M Irkham Dwi Ramadhan (0110223284)**
+    
+    **M Rifanul Haq Ihsani (0110221335)**
+    
+    **Achmad Rifa'i Ramadhan (0110223138)**\n
+    Kami harap dashboard ini tidak hanya menjadi sumber informasi, tetapi juga pemicu diskusi dan langkah nyata untuk memahami serta mengatasi kompleksitas isu perceraian di Indonesia. Mari bersama-sama kita gali makna di balik setiap angka dan kisah yang tersaji.
     """)
     st.markdown("---")
 
