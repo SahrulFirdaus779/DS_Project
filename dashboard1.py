@@ -89,14 +89,14 @@ with st.sidebar:
 
     menu_choice = st.radio(
         "Pilih Halaman",
-        ("Beranda / Ringkasan", "Tren Perceraian", "Faktor Penyebab", "Perbandingan Provinsi", "Peta Visualisasi", "Prediksi Perceraian", "Data Mentah")
+        ("Beranda / Ringkasan", "Tren Perceraian", "Faktor Penyebab", "Perbandingan Provinsi", "Peta Visualisasi", "Prediksi Perceraian", "Detail Data")
     )
 
     st.markdown("---")
     st.header("Tentang Proyek")
     st.info("""
         Proyek ini menganalisis tren dan faktor penyebab perceraian di Indonesia.
-        Data bersumber dari [Sumber Data Anda, misal: BPS, Kemenag].
+        Data bersumber dari BPS.
         Dibuat oleh Kelompok Pemula.
     """)
 
@@ -115,7 +115,7 @@ if menu_choice == "Beranda / Ringkasan":
     st.markdown("""
     Selamat datang di Dashboard Analisis Perceraian di Indonesia. Dashboard ini menyajikan gambaran komprehensif mengenai
     tren dan faktor-faktor yang melatarbelakangi kasus perceraian di berbagai provinsi di Indonesia.
-    Kami mengundang Anda untuk menjelajahi data ini lebih lanjut untuk memahami dinamika sosial yang terjadi.
+    Kami mengajak Anda untuk menjelajahi data ini lebih lanjut untuk memahami dinamika sosial yang terjadi.
     """)
     st.markdown("---")
 
@@ -704,12 +704,94 @@ elif menu_choice == "Prediksi Perceraian":
     else:
         st.info("Data kosong. Tidak dapat melakukan prediksi.")
 
+
 elif menu_choice == "Detail Data":
-    st.title("🗄️ Detail Data")
-    st.markdown("Halaman ini akan menampilkan tabel data yang digunakan.")
+    st.title("🗄️ Detail Data Perceraian Indonesia")
+    st.markdown("Halaman ini menampilkan ringkasan statistik dan tabel lengkap dari data yang digunakan dalam dashboard ini.")
     st.markdown("---")
 
     if not df.empty:
-        st.dataframe(df)
+        # --- Filters for Detail Data ---
+        st.sidebar.header("Filter Detail Data") 
+        
+        all_years = sorted(df['Tahun'].unique())
+        selected_years_detail = st.sidebar.slider(
+            "Pilih Rentang Tahun",
+            min_value=min(all_years),
+            max_value=max(all_years),
+            value=(min(all_years), max(all_years)),
+            key='detail_years_slider'
+        )
+
+        all_provinces = sorted(df['Provinsi'].unique())
+        selected_provinces_detail = st.sidebar.multiselect(
+            "Pilih Provinsi (Kosongkan untuk Semua)",
+            options=all_provinces,
+            default=[],
+            key='detail_provinces_multiselect'
+        )
+
+        # Apply filters to the DataFrame for this section
+        df_filtered_detail = df[(df['Tahun'] >= selected_years_detail[0]) & (df['Tahun'] <= selected_years_detail[1])]
+        if selected_provinces_detail:
+            df_filtered_detail = df_filtered_detail[df_filtered_detail['Provinsi'].isin(selected_provinces_detail)]
+
+        # --- Check if filtered data is empty ---
+        if df_filtered_detail.empty:
+            st.warning("Tidak ada data yang sesuai dengan filter yang dipilih. Harap sesuaikan filter Anda.")
+        else:
+            # --- Ringkasan Statistik Global (Sekarang Berdasarkan Filter) ---
+            st.subheader("Ringkasan Data Global")
+            col_summary1, col_summary2, col_summary3 = st.columns(3)
+            with col_summary1:
+                st.metric("Jumlah Baris Data", f"{df_filtered_detail.shape[0]:,.0f}")
+            with col_summary2:
+                st.metric("Jumlah Kolom Data", f"{df_filtered_detail.shape[1]:,.0f}")
+            with col_summary3:
+                st.metric("Rentang Tahun Data", f"{df_filtered_detail['Tahun'].min()} - {df_filtered_detail['Tahun'].max()}")
+            
+            st.write(f"**Jumlah Provinsi Unik:** {df_filtered_detail['Provinsi'].nunique()}")
+            st.markdown("---")
+            
+            # --- Tabel Data Lengkap (Sekarang Berdasarkan Filter) ---
+            st.subheader("Tabel Data Lengkap (Berdasarkan Filter)")
+            st.info("Anda dapat menggunakan fitur pencarian dan pengurutan bawaan tabel di bawah ini.")
+            st.dataframe(df_filtered_detail, use_container_width=True)
+            st.markdown("---") # Add a separator before the team info
+
+            # --- Bagian Identitas Kelompok (Tidak terpengaruh filter data) - DIPERBARUI ---
+            st.subheader("Identitas Kelompok Pengembang")
+            st.write("Dashboard ini dikembangkan oleh:")
+            st.markdown("""
+            * **Tim Peneliti Kelompok Pemula**
+                * Abiyyu Cakra (0110221100) 
+                * Achmad Rifa'i Ramadhan (0110223138)
+                * M Irkham Dwi Ramadhan (0110223284)
+                * M Rifanul Haq Ihsani (0110221335)
+                * [**Sahrul Firdaus (0110223114)**](https://www.linkedin.com/in/sahrul-firdaus/)
+            """)
+            st.info("Proyek ini adalah bagian dari inisiatif untuk menyediakan analisis data perceraian yang transparan dan mudah diakses bagi masyarakat.")
+
     else:
         st.info("Data kosong. Mohon periksa file 'finaldata.csv' Anda.")
+
+# # --- FOOTER ---
+# st.markdown("---") # Garis pemisah opsional di atas footer
+# st.markdown(
+#     """
+#     <style>
+#     .footer {
+#         font-size: 0.8rem;
+#         text-align: center;
+#         padding-top: 10px;   /* DIUBAH: Mengurangi jarak atas dari 20px menjadi 10px */
+#         padding-bottom: 5px; /* DIUBAH: Mengurangi jarak bawah dari 10px menjadi 5px */
+#         color: #888;
+#     }
+#     </style>
+#     <div class="footer">
+#         © 2025 Kelompok Pemula. Semua hak dilindungi.<br>
+#         Data analisis perceraian dari BPS (Badan Pusat Statistik) Indonesia.
+#     </div>
+#     """,
+#     unsafe_allow_html=True
+# )
