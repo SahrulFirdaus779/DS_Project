@@ -786,11 +786,15 @@ elif menu_choice == "Detail Data":
         st.info("Data kosong. Mohon periksa file 'finaldata.csv' Anda.")
 
 # --- Footer ---
-st.markdown("---")
+st.markdown("---") # Garis pemisah opsional
 st.markdown(
     """
     <div style="text-align: center; padding: 20px; color: #777; font-size: 14px;">
-        <p>Dibuat dengan ❤️ oleh <strong>Kelompok Pemula</strong> | Data Science © 2025</p>
+        <p>Dibuat dengan ❤️ oleh 
+        <a href="https://github.com/SahrulFirdaus779/DS_Project" target="_blank" style="color: #777; text-decoration: none;">
+            <strong>Kelompok Pemula</strong>
+        </a> 
+        | Data Science © 2025</p>
     </div>
     """,
     unsafe_allow_html=True
